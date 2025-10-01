@@ -1,5 +1,5 @@
 import { Body, Controller, Post } from '@nestjs/common';
-import { AuthService } from '@thallesp/nestjs-better-auth';
+import { AllowAnonymous, AuthService } from '@thallesp/nestjs-better-auth';
 import { auth } from 'src/utils/auth';
 import { CreateUserDto, LoginDto } from './DTO';
 
@@ -8,6 +8,7 @@ export class UserController {
   constructor(private readonly authService: AuthService<typeof auth>) {}
 
   @Post('register')
+  @AllowAnonymous()
   async register(
     @Body()
     body: CreateUserDto,
@@ -26,9 +27,9 @@ export class UserController {
   async login(@Body() body: LoginDto) {
     return this.authService.api.signInEmail({
       body: {
-         email: body.email, 
-         password: body.password
-         },
+        email: body.email,
+        password: body.password,
+      },
     });
   }
 }
