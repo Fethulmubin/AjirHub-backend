@@ -41,8 +41,8 @@ export class WirdEntryController {
   }
 
   @Get()
-  findAll(@Query('userId') userId?: string) {
-    return this.wirdEntryService.getAllWird(userId);
+  findAll(@Session() session: UserSession) {
+    return this.wirdEntryService.getAllWird(session.user.id);
   }
 
   @Get(':id')
