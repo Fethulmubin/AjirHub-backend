@@ -14,4 +14,9 @@ export const auth = betterAuth({
     enabled: true,
     // you can add config: requireEmailVerification, etc.
   },
+  user: {
+    additionalFields: {
+       phone: { type: "string"},
+    }
+  }
 });

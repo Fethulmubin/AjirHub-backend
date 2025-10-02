@@ -19,11 +19,13 @@ export class UserController {
         password: body.password,
         name: body.name,
         image: body.image ?? undefined,
+        phone: body.phone,
       },
     });
   }
 
   @Post('login')
+  @AllowAnonymous()
   async login(@Body() body: LoginDto) {
     return this.authService.api.signInEmail({
       body: {

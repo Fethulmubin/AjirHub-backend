@@ -20,6 +20,7 @@ model User {
   password      String?
   name          String?
   image         String?
+  phone         String   @unique
   emailVerified Boolean  @default(false) // <-- add this
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
@@ -47,7 +48,7 @@ model Session {
 }
 
 model Account {
-  id                    String   @id @default(uuid())
+  id                    String    @id @default(uuid())
   accountId             String
   providerId            String
   userId                String
@@ -61,7 +62,7 @@ model Account {
   createdAt             DateTime  @default(now())
   updatedAt             DateTime  @updatedAt
   user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  
+
   @@unique([providerId, accountId])
 }
 
