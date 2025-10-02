@@ -9,6 +9,7 @@ export class WirdEntryService {
 //   creating wirds for a user
 
   async createWird(data: CreateWirdEntryDto) {
+
     try {
       return await this.prisma.wirdEntry.create({
         data: {

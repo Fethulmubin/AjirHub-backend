@@ -14,7 +14,7 @@ export class CreateWirdEntryDto {
   @IsString()
   note?: string;
 
-  @IsDateString()
+  // @IsDateString()
   date: string;
 
   @IsString()
