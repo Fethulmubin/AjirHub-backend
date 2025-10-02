@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma.service';
-import { CreateWirdEntryDto } from './DTO';
+import { CreateWirdEntryDto, UpdateWirdEntryDto } from './DTO';
 
 @Injectable()
 export class WirdEntryService {
@@ -48,4 +48,29 @@ export class WirdEntryService {
   }
 
 //   updating a wird by id
+    async updateWird(id: string, data: UpdateWirdEntryDto) {
+        try {
+            return await this.prisma.wirdEntry.update({
+                where: { id },
+                data: {
+                    ...data,
+                },
+            });
+        } catch (error) {
+            console.log(error);
+            throw new Error('Failed to update Wird Entry');
+        }
+    }
+
+    // deleting a wird by id
+    async deleteWird(id: string) {
+        try {
+            return await this.prisma.wirdEntry.delete({
+                where: { id },
+            });
+        } catch (error) {
+            console.log(error);
+            throw new Error('Failed to delete Wird Entry');
+        }
+    }
 }

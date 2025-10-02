@@ -1,6 +1,6 @@
-import { Body, Controller, Get, Param, Post, Query } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put, Query } from '@nestjs/common';
 import { WirdEntryService } from './wird-entry.service';
-import { CreateWirdEntryDto } from './DTO';
+import { CreateWirdEntryDto, UpdateWirdEntryDto } from './DTO';
 
 @Controller('wird-entry')
 export class WirdEntryController {
@@ -19,6 +19,16 @@ export class WirdEntryController {
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.wirdEntryService.getWird(id);
+  }
+
+   @Put(':id')
+  update(@Param('id') id: string, @Body() dto: UpdateWirdEntryDto) {
+    return this.wirdEntryService.updateWird(id, dto);
+  }
+
+  @Delete(':id')
+  remove(@Param('id') id: string) {
+    return this.wirdEntryService.deleteWird(id);
   }
 
 }
