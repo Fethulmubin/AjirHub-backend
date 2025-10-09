@@ -1,15 +1,31 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+} from '@nestjs/common';
 import { CampaignService } from './campaign.service';
 import { CreateCampaignDto } from './dto/create-campaign.dto';
 import { UpdateCampaignDto } from './dto/update-campaign.dto';
+import type { UserSession } from '@thallesp/nestjs-better-auth';
+import { Session } from '@thallesp/nestjs-better-auth';
 
 @Controller('campaign')
 export class CampaignController {
   constructor(private readonly campaignService: CampaignService) {}
 
   @Post()
-  create(@Body() createCampaignDto: CreateCampaignDto) {
-    return this.campaignService.createCampaign(createCampaignDto);
+  create(
+    @Body() createCampaignDto: CreateCampaignDto,
+    @Session() session: UserSession,
+  ) {
+    return this.campaignService.createCampaign({
+      ...createCampaignDto,
+      ownerId: session.user.id,
+    });
   }
 
   @Get()
@@ -19,11 +35,14 @@ export class CampaignController {
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.campaignService.findCampaignById(id)
+    return this.campaignService.findCampaignById(id);
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateCampaignDto: UpdateCampaignDto) {
+  update(
+    @Param('id') id: string,
+    @Body() updateCampaignDto: UpdateCampaignDto,
+  ) {
     return this.campaignService.updateCampaign(id, updateCampaignDto);
   }
 
