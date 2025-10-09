@@ -75,3 +75,28 @@ export class WirdEntryService {
         }
     }
 }
+
+
+/*
+
+user - Module
+  user.module.ts
+    providers: [UserService]
+    exports: [UserService]
+  user.service.ts
+     getuserbyid()
+
+
+post -module
+  post.module.ts
+    providers: [PostService, UserService]
+
+  post.service.ts
+     createpost(){
+        const user = this.userService.getUserById()
+     }
+
+app - Module
+  app.module.ts
+    imports: [UserModule, PostModule]
+*/

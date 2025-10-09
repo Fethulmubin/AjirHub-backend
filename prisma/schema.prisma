@@ -8,22 +8,24 @@ datasource db {
 }
 
 model User {
-  id            String         @id @default(uuid())
-  email         String         @unique
-  createdAt     DateTime       @default(now())
-  updatedAt     DateTime       @updatedAt
-  dailyLimit    Int            @default(1000)
-  weeklyLimit   Int            @default(5000)
+  id            String          @id @default(uuid())
+  email         String          @unique
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+  dailyLimit    Int             @default(1000)
+  weeklyLimit   Int             @default(5000)
   image         String?
   name          String?
   password      String?
-  emailVerified Boolean        @default(false)
-  phone         String         @unique
+  emailVerified Boolean         @default(false)
+  phone         String          @unique
   accounts      Account[]
-  campaigns     Campaign[]     @relation("campaigns_created")
-  contributions Contribution[]
   sessions      Session[]
   wirdEntries   WirdEntry[]
+  contributions Contribution[]
+  campaigns     Campaign[]      @relation("campaigns_created")
+  memberships   CampaignMember[]
+
 }
 
 model Session {
@@ -81,18 +83,19 @@ model WirdEntry {
 }
 
 model Campaign {
-  id              String         @id @default(uuid())
+  id              String           @id @default(uuid())
   ownerId         String
   title           String
   description     String?
   targetCount     Int
-  collectedCount  Int            @default(0)
+  collectedCount  Int              @default(0)
   maxContributors Int?
-  status          CampaignStatus @default(ACTIVE)
-  createdAt       DateTime       @default(now())
+  status          CampaignStatus   @default(ACTIVE)
+  createdAt       DateTime         @default(now())
   expiresAt       DateTime?
-  owner           User           @relation("campaigns_created", fields: [ownerId], references: [id])
+  owner           User             @relation("campaigns_created", fields: [ownerId], references: [id])
   contributions   Contribution[]
+  members         CampaignMember[]
 
   @@index([status, expiresAt])
 }
@@ -111,8 +114,33 @@ model Contribution {
   @@index([campaignId, userId])
 }
 
+model CampaignMember {
+  id          String            @id @default(uuid())
+  campaignId  String
+  userId      String
+  role        CampaignRole      @default(PARTICIPANT)
+  status      MembershipStatus  @default(PENDING)
+  createdAt   DateTime          @default(now())
+  campaign    Campaign          @relation(fields: [campaignId], references: [id])
+  user        User              @relation(fields: [userId], references: [id])
+
+  @@unique([campaignId, userId])
+}
+
 enum CampaignStatus {
   ACTIVE
   COMPLETED
   CANCELLED
+}
+
+enum CampaignRole {
+  OWNER
+  PARTICIPANT
+}
+
+enum MembershipStatus {
+  PENDING     // waiting for approval
+  ACCEPTED    // joined successfully
+  INVITED     // invited but not yet accepted
+  REJECTED    // rejected by owner
 }
